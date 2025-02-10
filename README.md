@@ -1,5 +1,7 @@
 # lactf_2025
-Repositiory for UCLA CTF event 7-9 Feb 2025
+Some of my solves for LA CTF 2025
 
+
+7-9 February 2025
 
 https://lac.tf/
