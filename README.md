@@ -1,4 +1,4 @@
-# lactf_2025
+# LA CTF 2025
 Some of my solves for LA CTF 2025
 
 
