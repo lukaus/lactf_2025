@@ -5,13 +5,13 @@
 Hint: 2Password > 1password
 
 Provided files:
-- [chall](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/chall) - executable to interface with
-- [chall.c](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/chall.c) - source code for executable
-- [libc.so.6](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/libc.so.6) - glibc library from serve
-- [ld-linux-x86-64.so.2](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/ld-linux-x86-64.so.2) - linux linker from server
-- [Dockerfile](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/Dockerfile) - configuration file for Docker container in which the chall executable is running on the server 
+- [chall](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/chall) - executable with which we will interface
+- [chall.c](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/chall.c) - source code for executable.
+- [libc.so.6](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/libc.so.6) - glibc library from server.
+- [ld-linux-x86-64.so.2](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/ld-linux-x86-64.so.2) - linux linker from server.
+- [Dockerfile](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/Dockerfile) - configuration file for Docker container in which the chall .executable is running on the server 
 
-We are also given the address to a socket with which to interface with the server -- where the actual flag file is stored
+We are also given the address to a socket with which to interface with the server -- where the actual flag file is stored.
 
 ## Starting Point - Exploration
 Taking a look at [chall.c](https://github.com/uclaacm/lactf-archive/blob/main/2025/pwn/2password/chall.c):
