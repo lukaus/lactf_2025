@@ -113,6 +113,7 @@ p.sendline("u")
 output = p.recvline()
 ```
 Output:
+
 ![output](/media/2password_dump.png)
 <br/><br/>
 
