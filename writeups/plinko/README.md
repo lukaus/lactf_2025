@@ -109,7 +109,7 @@ The physics engine used is [matter.js](https://brm.io/matter-js/), which has som
 ```
 ![Halfway there!](/media/plinko_halfway.gif)
 
-After playing around with the gravity value, x=0.41 seems about right to get the ball to glide toward the edge. But, the first time the ball collides with something, including the scoring area, the socket is closed and I am told not to cheat! Oh yeah, the server validation... Let's take a closer look.
+After playing around with the gravity value, x=0.41 seems about right to get the ball to glide toward the edge. But, the first time the ball collides with something, including the scoring area, the socket is closed and I am told not to cheat! Oh, thats right, the server validation... Let's take a closer look.
 
 <br/><br/>
 
@@ -140,7 +140,7 @@ function validatePosition(prevCollision, prevVelo, prevTime, currCollision, curr
 }
 ...
 ```
-First, the server checks that all the expected values are provided at all: the ```time``` that the current collision occurred, the ```x and y position``` of the current and last collision, and the ball's previous and current ```x and y velocity```. Then, the ```x velocity``` is checked to make sure it has not deviated much from the previous value (since there is no friction, air resistance, or anything like that, ```x velocity``` should only change as a result of a collision).
+First, the server checks that all the expected values are provided at all: the ```time``` that the current collision occurred, the ```x and y position``` of the current and last collision, and the ball's previous and current ```x and y velocity```. Then, the ```x velocity``` is checked to make sure it has not deviated much from the previous value (```x velocity``` should only really change as a result of a collision).
 Then, previous collision timestamp is subtracted from the current one to find ```delta-time```, which is used via the ```calcPositionDiff()``` function to make sure the new ```y position``` makes sense in terms of gravitational velocity. If any of the values are unexpected, validation fails, otherwise ```true``` is returned. 
 
 Notice what was never checked? ```x position```! Well, the server checks that it is provided, but the value is never checked for consistency. Still, we are headed down the right track! We just need to cache the ball's ```x velocity``` so that we can send it to the server on collision. We only need to add four more lines to public/physics.js now to solve this challenge!
