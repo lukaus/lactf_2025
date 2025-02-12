@@ -1,8 +1,8 @@
 # LA CTF 2025 - lukaus's solves
-Write-ups for of my solves for LA CTF 2025:
+Write-ups for some of my solves for LA CTF 2025:
 <br/>
 
- - [pwn/2password]("/2password") - 2password > 1password
+ - [pwn/2password](2password/README.md) - 2password > 1password
 
 
 <br/><br/>
