@@ -155,7 +155,7 @@ let prevXVel = 0.0;
 ```
 <br/><br/>
 
-We also have to set this value back to 0 every time the ball is dropped for a new game of Plinko. Otherwise, the first time the ball collides with something, the final value from the last iteration will be sent, and the sever will know we are cheating. 
+We also have to set this value back to 0 every time the ball is dropped for a new game of Plinko. Otherwise, the first time the ball collides with something, the final value from the previous iteration will be sent, and the server will ~~think~~ know we are cheating. 
 ```javascript
 ...// line 78 : public/physics.js
         if ("error" in JSON.parse(resp)) window.location = "/login";
