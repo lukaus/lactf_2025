@@ -1,7 +1,8 @@
 # LA CTF 2025 - lukaus's solves
-Some of my solves for LA CTF 2025
+Write-ups for of my solves for LA CTF 2025
 
-Coming soon!™
+
+(pwn/2password)["/2password"] - 2password > 1password
 
 
 7-9 February 2025
