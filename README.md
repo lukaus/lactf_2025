@@ -2,6 +2,7 @@
 Write-ups for some of my solves for UCLA's Capture the Flag competition 2025: [LA CTF](https://lac.tf/)
 
  - [pwn/2password](/writeups/2password/README.md) - 2password > 1password
+ - [web/plinko](/writeups/plinko/README.md) - I was tired of the rigged gambling games online, so I made this completely fair version of plinko. Don't try and cheat me.
    
 more to follow...
 
