@@ -1,7 +1,7 @@
 # LA CTF 2025 - lukaus's solves
 Write-ups for some of my solves for UCLA's Capture the Flag competition 2025: [LA CTF](https://lac.tf/)
 
- - [pwn/2password](2password/README.md) - 2password > 1password
+ - [pwn/2password](/writeups/2password/README.md) - 2password > 1password
    
 more to follow...
 
