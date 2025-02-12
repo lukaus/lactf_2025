@@ -149,7 +149,7 @@ Notice what was never checked? ```x position```! Well, the server checks that it
 
 First, lets just create a global variable around line 42 of ```public/physics.js``` to store ```x velocity``` in, and set it to 0.0 (since ```x velocity``` is initially 0):
 ```javascript
-...// line 42 : public/physics.js
+... // line 42 : public/physics.js
 let prevXVel = 0.0;
 ...
 ```
@@ -157,7 +157,7 @@ let prevXVel = 0.0;
 
 We also have to set this value back to 0 every time the ball is dropped for a new game of Plinko. Otherwise, the first time the ball collides with something, the final value from the previous iteration will be sent, and the server will ~~think~~ know we are cheating. 
 ```javascript
-...// line 78 : public/physics.js
+... // line 78 : public/physics.js
         if ("error" in JSON.parse(resp)) window.location = "/login";
         //engine = Engine.create();
         engine = Engine.create({gravity:{x:0.41, y:1, scale:0.001}}); // replace the default engine gravity
