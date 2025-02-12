@@ -96,9 +96,9 @@ p = process("./chall") # local executable
 
 ```
 <br/><br/>
-Next, I create a payload chaining the format specifier "%p" together several times, separated by a hyphen for readibility, to leak as much of the data on the stack that I can. I played around with the range, printing about 11 is the sweet spot -- too many, and the program will crash, too few, and the values we need will not be leaked. It seemed to vary slightly between local and remote. The "sendline" then sends the payload to the process as the value for "username".
+Next, I create a payload chaining the format specifier "%p" together several times, separated by a hyphen for readability, to leak as much of the data on the stack that I can. I played around with the range, printing about 11 is the sweet spot -- too many, and the program will crash, too few, and the values we need will not be leaked. It seemed to vary slightly between local and remote. The "sendline" then sends the payload to the process as the value for "username".
 ```python
-payload = "-".join("%p for _ in range((11)) // generate payload
+payload = "-".join("%p for _ in range(11)) # generate payload
 
 p.sendline(payload)
 ```
@@ -117,7 +117,7 @@ Output:
 ![output](/media/2password_dump.png)
 <br/><br/>
 
-It took me a little bit of playing around with this output to find a way to get the flag, though I was overcomplicating it. I tried interpreting these printed values as pointers to other via the %s, but the answer was pretty simple -- in fact, the flag has already been printed! Looking at one of the values:
+It took me a little bit of playing around with this output to find a way to get the flag, though I was overcomplicating it. I tried interpreting these printed values as pointers to other parts of the stack via the %s, but the answer was pretty simple -- in fact, the flag has already been printed! Looking at one of the values:
 ```
 0x68747b667463616c
 ```
@@ -158,7 +158,7 @@ When run on the local copy, I get:
 ```bash
 lactf{this_is_a_fake_flag_for_local}\x00\x10
 ```
-Great, that's the dummy flag! There's a litte junk data, one of the values in "output" is likely a pointer to somewhere, you could definitely refine the output processing so that only the flag is printed, but I wasn't too worried about that in this setting.
+Great, that's the dummy flag! There's a little junk data, one of the values in "output" is likely a pointer to somewhere, you could definitely refine the output processing so that only the flag is printed, but I wasn't too worried about that in this setting.
 
 <br/><br/>
 
@@ -178,7 +178,7 @@ from pwn import *
 p = remote("chall.lac.tf", 31142) # point to server copy on appropriate port 
 
 # Generate payload
-payload = "-".join("%p for _ in range((11)) // generate payload
+payload = "-".join("%p for _ in range(11)) # generate payload
 p.sendline(payload)
 
 p.recvuntil(b"Enter password1: ")
