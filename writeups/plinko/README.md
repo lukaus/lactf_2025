@@ -30,8 +30,9 @@ When we run the game, we see a completely fair implementation of plinko:
 
 ![Default gameplay](/media/plinko_default.gif)
 
+<br/><br/>
 
-Next, lets look through the code and see where the flag is referenced. 
+Next, let's look through the code and see where the flag is referenced. 
 
 ```javascript
 ... // line 12 : app.js
@@ -80,11 +81,11 @@ function validatePosition(prevCollision, prevVelo, prevTime, currCollision, curr
 So let's get an idea of the overall game logic and see if there's a way to manipulate something in our favor, and win the flag.
 
 Looking through the code, the relevant logic of the game goes as follows:
-1. Client clicks to drop a ball, which creates the game board and physics engine, initilizes the pegs and ball, and creates the scoring zones, then sends the ball's properties to the server : [public/physics.js, lines 45-75](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/public/physics.js#L45)
+1. Client clicks to drop a ball, which creates the game board and physics engine, initializes the pegs and ball, and creates the scoring zones, then sends the ball's properties to the server : [public/physics.js, lines 45-75](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/public/physics.js#L45)
 2. The server checks that the ball is starting at the correct x-position, then saves the ball's properties to validate against later. If the ball is not at x=500, the socket is closed with the message "Stop cheating."  : [app.js, lines 152-171](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/app.js#L152)
 3. The client begins simulating a simple 2D frictionless kinematic physics engine : [public/physics.js, line 96](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/public/physics.js#L96)
 4. If the ball collides with something, the physics engine is paused, and the ball's physics properties (location and velocity) are sent to the server, as well as the properties of whatever it collided with : [public/physics.js, line 98-125](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/public/physics.js#L98)
-6. The server validates (via validatePosition()) that the ball's properties have not been modified in a way that would inconsistent with the expected physics calculations : [app.js, lines 173-184](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/app.js#L173)
+6. The server validates (via validatePosition()) that the ball's properties have not been modified in a way that would be inconsistent with the expected physics calculations : [app.js, lines 173-184](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/app.js#L173)
 7. The server checks that the object the ball is colliding with should actually exist where the client says it is. If either of the checks fail, the socket is closed with the message "Stop cheating!!" : [app.js, lines 185-197](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/app.js#L185)
 9. Otherwise, the server checks if the ball is colliding with the "ground", meaning one of the scoring zones, and sends the appropriate points (and flag if applicable) to the client before closing the socket : [app.js, lines 199-208](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/app.js#L199)
 10. If the ball has collided with a peg or wall, the server will calculate how the ball should bounce, then send that back to the client : [app.js, lines 210-238](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/app.js#L210)
@@ -94,10 +95,10 @@ Looking through the code, the relevant logic of the game goes as follows:
 
 From here, I looked for a way to manipulate the game state to score points faster and more consistently.
 
-## [The Solve : Abusing server-side validation
+## The Solve : Abusing server-side validation
 My first thought was to see if I could mess with the physics engine. First, I'll use Chromium's "Overrides" feature in the Developer Tools to override ```public/physics.js``` so that I can change the client-side code as needed. Hopefully there will be some way to get the flag this way.
 
-The physics engine used is [matter.js](https://brm.io/matter-js/), which has some useful documentation. After seeing where the physics engine was initialized on the client side ([```public/physics.js```, line 78](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/public/physics.js#L78)), I decided that would be as good a starting point as any. Looking at [the matter.js documentation](), I noticed that ```engine.gravity``` has an x-component! I can use that to make the ball glide gently down the side of the game board directly into the high-scoring zones. So, I change the game engine definition:
+The physics engine used is [matter.js](https://brm.io/matter-js/), which has some useful documentation. After seeing where the physics engine was initialized on the client side ([```public/physics.js```, line 78](https://github.com/uclaacm/lactf-archive/blob/ad381b48e37a11fabc800724c50b1fdf0ddc6c80/2025/web/plinko/public/physics.js#L78)), I decided that would be as good a starting point as any. Looking at [the matter.js documentation](https://brm.io/matter-js/), I noticed that ```engine.gravity``` has an x-component! I can use that to make the ball glide gently down the side of the game board directly into the high-scoring zones. So, I change the game engine definition:
 ```javascript
 ... // line 78 : public/physics.js
         if ("error" in JSON.parse(resp)) window.location = "/login";
@@ -139,8 +140,8 @@ function validatePosition(prevCollision, prevVelo, prevTime, currCollision, curr
 }
 ...
 ```
-First, the server checks that all the expected values are provided at all: the ```time``` that the current collision occured, the ```x and y position``` of the current and last collision, and the ball's previous and current ```x and y velocity```. Then, the ```x velocity``` is checked to make sure it has not deviated much from the previous value (since there is no friction, air resistance, or anything like that, ```x velocity``` should only change as a result of a collision).
-Then, previous collision timestamp is subtracted from the current one to find ```delta-time```, which is used via the ```calcPositionDifference()``` function to make sure the new ```y position``` makes sense in terms of gravitational velocity. If any of the values are unexpected, validation fails, otherwise ```true``` is returned. 
+First, the server checks that all the expected values are provided at all: the ```time``` that the current collision occurred, the ```x and y position``` of the current and last collision, and the ball's previous and current ```x and y velocity```. Then, the ```x velocity``` is checked to make sure it has not deviated much from the previous value (since there is no friction, air resistance, or anything like that, ```x velocity``` should only change as a result of a collision).
+Then, previous collision timestamp is subtracted from the current one to find ```delta-time```, which is used via the ```calcPositionDiff()``` function to make sure the new ```y position``` makes sense in terms of gravitational velocity. If any of the values are unexpected, validation fails, otherwise ```true``` is returned. 
 
 Notice what was never checked? ```x position```! Well, the server checks that it is provided, but the value is never checked for consistency. Still, we are headed down the right track! We just need to cache the ball's ```x velocity``` so that we can send it to the server on collision. We only need to add four more lines to public/physics.js now to solve this challenge!
 
@@ -206,7 +207,7 @@ The last step is to capture the flag as it is returned. I just put a breakpoint 
 
 This was one of the most fun challenges I was able to complete! 
 
-While chatting with some other participants after the competition ended, it sounded like there were a lot of creative ways to solve this one. One participant said they set the ball's initial Y position much much higher than the default, which tended to cause it to bounce more aggressivly toward the sides. One team removed several rows of pegs so that the ball would have a clearer shot to fall towards the high-scoring zone. Another participant said they just played it legitimately for an hour and eventually won enough points to get the flag!
+While chatting with some other participants after the competition ended, it sounded like there were a lot of creative ways to solve this one. One participant said they set the ball's initial Y position much much higher than the default, which tended to cause it to bounce more aggressively toward the sides. One team removed several rows of pegs so that the ball would have a clearer shot to fall towards the high-scoring zone. Another participant said they just played it legitimately for an hour and eventually won enough points to get the flag!
 
 This was my highest scoring challenge in the CTF. Points were granted based on total solves, so fewer solves across all teams meant more points. I was around the 75th team to solve this challenge, and only 98 teams solved it total, so I'm rather proud to have solved this one fairly easily.
 
