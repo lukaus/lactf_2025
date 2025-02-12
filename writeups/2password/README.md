@@ -219,7 +219,7 @@ $ python solve.py
 Trimming the junk data, the flag is revealed to be ```lactf{hunter2_cfc0xz68}```
 
 
-This was my 9th solve, roughly 52 minutes before the competition ended! [I wonder if I can solve one more...](writeups/Extremely-Convenient-Breaker)
+This was my 9th solve, roughly 52 minutes before the competition ended! [I wonder if I can solve one more...](/writeups/Extremely-Convenient-Breaker)
 
 
 
