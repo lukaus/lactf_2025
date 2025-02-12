@@ -112,6 +112,8 @@ p.sendline("u")
 
 output = p.recvline()
 ```
+Output:
+![output](/media/2password_dump.png)
 <br/><br/>
 
 It took me a little bit of playing around with this output to find a way to get the flag, though I was overcomplicating it. I tried interpreting these printed values as pointers to other via the %s, but the answer was pretty simple -- in fact, the flag has already been printed! Looking at one of the values:
